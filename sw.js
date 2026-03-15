@@ -1,4 +1,4 @@
-const CACHE_NAME = 'note-v2';
+const CACHE_NAME = 'note-v3';
 const ASSETS = ['./', './index.html', './script.js', './manifest.json'];
 
 self.addEventListener('install', (e) => {
