@@ -3,26 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini PWA</title>
+    <title>PWA Notes</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
-        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
-        button { padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; }
+        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; max-width: 500px; margin: auto; }
+        textarea { width: 100%; height: 60px; box-sizing: border-box; padding: 10px; }
+        button { cursor: pointer; border: none; padding: 8px 12px; border-radius: 4px; color: white; margin-top: 5px; }
+        .btn-add { background: #28a745; width: 100%; font-size: 1rem; margin-bottom: 20px; }
+        #notesList { margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h1>Notiz-Speicher</h1>
-    <textarea id="noteInput" placeholder="Schreib was..."></textarea>
-    <button onclick="saveNote()">Speichern</button>
-    <h3>Deine Notiz:</h3>
-    <p id="output"></p>
+    <h1>Meine Notizen</h1>
+    <textarea id="noteInput" placeholder="Neue Notiz..."></textarea>
+    <button class="btn-add" onclick="saveNote()">Hinzufügen</button>
+    
+    <div id="notesList"></div>
 
     <script src="script.js"></script>
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+            // Prüfen, ob ein Update bereitsteht
+            reg.onupdatefound = () => {
+                const installingWorker = reg.installing;
+                installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed') {
+                        if (navigator.serviceWorker.controller) {
+                            // Neuer Content gefunden!
+                            console.log('Neues Update verfügbar... lade neu.');
+                            window.location.reload();
+                        }
+                    }
+                };
+            };
+        });
+    });
+}
     </script>
 </body>
 </html>
