@@ -1,60 +1,29 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profi PWA</title>
-  <link rel="manifest" href="manifest.json">
-  <style>
-    body { font-family: sans-serif; text-align: center; padding: 20px; background: #eee; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 20px; }
-    #installBtn { display: none; padding: 10px 20px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini PWA</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+        button { padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; }
+    </style>
 </head>
 <body>
+    <h1>Notiz-Speicher</h1>
+    <textarea id="noteInput" placeholder="Schreib was..."></textarea>
+    <button onclick="saveNote()">Speichern</button>
+    <h3>Deine Notiz:</h3>
+    <p id="output"></p>
 
-  <h1>🚀 Profi PWA Demo</h1>
-  <button id="installBtn">App Installieren</button>
-
-  <div class="card">
-    <h3>API Daten (Offline verfügbar):</h3>
-    <p id="apiData">Lade Daten...</p>
-  </div>
-
-  <script>
-    // 1. Service Worker registrieren
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js');
-    }
-
-    // 2. Installations-Logik
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'inline-block'; // Button zeigen, wenn installierbar
-    });
-
-    installBtn.addEventListener('click', () => {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choice) => {
-        if (choice.outcome === 'accepted') installBtn.style.display = 'none';
-      });
-    });
-
-    // 3. Beispiel-Daten laden (funktioniert auch offline dank SW)
-    fetch('https://jsonplaceholder.typicode.com')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('apiData').innerText = data.title;
-      })
-      .catch(() => {
-        document.getElementById('apiData').innerText = "Daten aus Cache geladen!";
-      });
-  </script>
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
 </body>
 </html>
-
 

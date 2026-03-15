@@ -1,28 +1,13 @@
-const CACHE_NAME = 'profi-pwa-v2';
-const APP_ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  'https://jsonplaceholder.typicode.com' // Beispiel-API-Daten cachen
-];
+const CACHE_NAME = 'note-v1';
+const ASSETS = ['./', './index.html', './script.js', './manifest.json'];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_ASSETS))
-  );
+self.addEventListener('install', (e) => {
+    e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      const fetchPromise = fetch(event.request).then(networkResponse => {
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, networkResponse.clone());
-        });
-        return networkResponse;
-      });
-      return cachedResponse || fetchPromise;
-    })
-  );
+self.addEventListener('fetch', (e) => {
+    e.respondWith(
+        caches.match(e.request).then(response => response || fetch(e.request))
+    );
 });
 
